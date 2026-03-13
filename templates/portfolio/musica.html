@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %}Música - Todo es Arte{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="padding-top: 100px;">
+    <h2 class="philosophy-title font-serif text-center mb-5">Mi Música</h2>
+    
+    <!-- Canciones -->
+    {% if canciones %}
+    <div class="row">
+        {% for cancion in canciones %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card card-custom" style="background-color: rgba(255, 255, 255, 0.05); border: 1px solid rgba(201, 169, 97, 0.2);">
+                {% if cancion.imagen_portada %}
+                    <img src="{{ cancion.imagen_portada.url }}" class="card-img-top" alt="{{ cancion.titulo }}" style="height: 300px; object-fit: cover;">
+                {% else %}
+                    <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 300px; background: linear-gradient(135deg, rgba(201, 169, 97, 0.2), rgba(10, 10, 10, 0.8));">
+                        <i class="fas fa-music fa-4x" style="color: var(--color-accent);"></i>
+                    </div>
+                {% endif %}
+                <div class="card-body" style="color: var(--color-text);">
+                    <h5 class="card-title font-serif" style="color: var(--color-text); margin-bottom: 1rem;">{{ cancion.titulo }}</h5>
+                    {% if cancion.descripcion %}
+                        <p class="card-text" style="color: var(--color-text-muted); margin-bottom: 1.5rem;">{{ cancion.descripcion|truncatewords:20 }}</p>
+                    {% endif %}
+                    <div class="d-flex flex-column gap-2">
+                        {% if cancion.url_youtube %}
+                            <a href="{{ cancion.url_youtube }}" target="_blank" class="btn btn-solid-custom w-100" style="font-size: 1rem; padding: 12px;">
+                                <i class="fab fa-youtube"></i> Ver en YouTube
+                            </a>
+                        {% endif %}
+                        <div class="d-flex gap-2">
+                            {% if cancion.url_spotify %}
+                                <a href="{{ cancion.url_spotify }}" target="_blank" class="btn btn-outline-light-custom flex-fill" style="font-size: 0.9rem; padding: 8px;">
+                                    <i class="fab fa-spotify"></i> Spotify
+                                </a>
+                            {% endif %}
+                            {% if cancion.url_soundcloud %}
+                                <a href="{{ cancion.url_soundcloud }}" target="_blank" class="btn btn-outline-light-custom flex-fill" style="font-size: 0.9rem; padding: 8px;">
+                                    <i class="fab fa-soundcloud"></i> SoundCloud
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <small class="d-block mt-3" style="color: var(--color-text-muted);">
+                        <i class="fas fa-calendar"></i> {{ cancion.fecha_lanzamiento|date:"d M Y" }}
+                    </small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Álbumes -->
+    {% if albumes %}
+    <h3 class="philosophy-title font-serif text-center mt-5 mb-4" style="font-size: 2.5rem;">Álbumes</h3>
+    <div class="row">
+        {% for album in albumes %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card card-custom" style="background-color: rgba(255, 255, 255, 0.05); border: 1px solid rgba(201, 169, 97, 0.2);">
+                {% if album.imagen_portada %}
+                    <img src="{{ album.imagen_portada.url }}" class="card-img-top" alt="{{ album.titulo }}" style="height: 300px; object-fit: cover;">
+                {% else %}
+                    <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 300px; background: linear-gradient(135deg, rgba(201, 169, 97, 0.2), rgba(10, 10, 10, 0.8));">
+                        <i class="fas fa-compact-disc fa-4x" style="color: var(--color-accent);"></i>
+                    </div>
+                {% endif %}
+                <div class="card-body" style="color: var(--color-text);">
+                    <h5 class="card-title font-serif" style="color: var(--color-text); margin-bottom: 1rem;">{{ album.titulo }}</h5>
+                    {% if album.descripcion %}
+                        <p class="card-text" style="color: var(--color-text-muted); margin-bottom: 1.5rem;">{{ album.descripcion|truncatewords:20 }}</p>
+                    {% endif %}
+                    <div class="d-flex flex-column gap-2">
+                        {% if album.url_youtube %}
+                            <a href="{{ album.url_youtube }}" target="_blank" class="btn btn-solid-custom w-100" style="font-size: 1rem; padding: 12px;">
+                                <i class="fab fa-youtube"></i> Ver en YouTube
+                            </a>
+                        {% endif %}
+                        {% if album.url_spotify %}
+                            <a href="{{ album.url_spotify }}" target="_blank" class="btn btn-outline-light-custom" style="font-size: 0.9rem; padding: 8px;">
+                                <i class="fab fa-spotify"></i> Spotify
+                            </a>
+                        {% endif %}
+                    </div>
+                    <small class="d-block mt-3" style="color: var(--color-text-muted);">
+                        <i class="fas fa-calendar"></i> {{ album.fecha_lanzamiento|date:"d M Y" }}
+                    </small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Videos -->
+    {% if videos %}
+    <h3 class="philosophy-title font-serif text-center mt-5 mb-4" style="font-size: 2.5rem;">Videos Musicales</h3>
+    <div class="row">
+        {% for video in videos %}
+        <div class="col-md-6 mb-4">
+            <div class="card card-custom" style="background-color: rgba(255, 255, 255, 0.05); border: 1px solid rgba(201, 169, 97, 0.2);">
+                {% if video.imagen_portada %}
+                    <img src="{{ video.imagen_portada.url }}" class="card-img-top" alt="{{ video.titulo }}" style="height: 300px; object-fit: cover;">
+                {% else %}
+                    <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 300px; background: linear-gradient(135deg, rgba(201, 169, 97, 0.2), rgba(10, 10, 10, 0.8));">
+                        <i class="fas fa-video fa-4x" style="color: var(--color-accent);"></i>
+                    </div>
+                {% endif %}
+                <div class="card-body" style="color: var(--color-text);">
+                    <h5 class="card-title font-serif" style="color: var(--color-text); margin-bottom: 1rem;">{{ video.titulo }}</h5>
+                    {% if video.descripcion %}
+                        <p class="card-text" style="color: var(--color-text-muted); margin-bottom: 1.5rem;">{{ video.descripcion }}</p>
+                    {% endif %}
+                    {% if video.url_youtube %}
+                        <a href="{{ video.url_youtube }}" target="_blank" class="btn btn-solid-custom w-100" style="font-size: 1rem; padding: 12px;">
+                            <i class="fab fa-youtube"></i> Ver en YouTube
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if not canciones and not albumes and not videos %}
+        <div class="text-center py-5">
+            <i class="fas fa-music fa-4x" style="color: var(--color-text-muted); margin-bottom: 1rem;"></i>
+            <p class="lead" style="color: var(--color-text-muted);">No hay música disponible aún.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

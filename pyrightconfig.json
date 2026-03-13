@@ -1,0 +1,13 @@
+{
+    "include": [
+        "**/*.py"
+    ],
+    "exclude": [
+        "**/__pycache__",
+        "**/venv",
+        "**/env"
+    ],
+    "pythonVersion": "3.13",
+    "pythonPlatform": "Windows",
+    "typeCheckingMode": "basic"
+}

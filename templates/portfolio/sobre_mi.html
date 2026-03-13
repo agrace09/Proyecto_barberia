@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Sobre Mí - Marca Personal{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    {% if info_personal %}
+        <div class="row">
+            <div class="col-md-4 text-center mb-4">
+                {% if info_personal.foto_perfil %}
+                    <img src="{{ info_personal.foto_perfil.url }}" 
+                         alt="{{ info_personal.nombre_artistico }}" 
+                         class="img-fluid rounded-circle shadow-lg"
+                         style="max-width: 300px; width: 100%;">
+                {% else %}
+                    <div class="bg-dark rounded-circle d-inline-flex align-items-center justify-content-center" 
+                         style="width: 300px; height: 300px;">
+                        <i class="fas fa-user fa-5x text-warning"></i>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="col-md-8">
+                <h1 class="mb-4">{{ info_personal.nombre_artistico }}</h1>
+                <div class="mb-4">
+                    {{ info_personal.biografia|linebreaks }}
+                </div>
+                
+                <!-- Redes Sociales -->
+                <div class="mb-4">
+                    <h4>Sígueme en:</h4>
+                    <div class="d-flex gap-3 flex-wrap">
+                        {% if info_personal.instagram %}
+                            <a href="{{ info_personal.instagram }}" target="_blank" class="btn btn-outline-dark">
+                                <i class="fab fa-instagram"></i> Instagram
+                            </a>
+                        {% endif %}
+                        {% if info_personal.facebook %}
+                            <a href="{{ info_personal.facebook }}" target="_blank" class="btn btn-outline-primary">
+                                <i class="fab fa-facebook"></i> Facebook
+                            </a>
+                        {% endif %}
+                        {% if info_personal.twitter %}
+                            <a href="{{ info_personal.twitter }}" target="_blank" class="btn btn-outline-info">
+                                <i class="fab fa-twitter"></i> Twitter
+                            </a>
+                        {% endif %}
+                        {% if info_personal.youtube %}
+                            <a href="{{ info_personal.youtube }}" target="_blank" class="btn btn-outline-danger">
+                                <i class="fab fa-youtube"></i> YouTube
+                            </a>
+                        {% endif %}
+                        {% if info_personal.spotify %}
+                            <a href="{{ info_personal.spotify }}" target="_blank" class="btn btn-outline-success">
+                                <i class="fab fa-spotify"></i> Spotify
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Información de Contacto -->
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Información de Contacto</h5>
+                        {% if info_personal.email_contacto %}
+                            <p class="mb-2">
+                                <i class="fas fa-envelope text-warning"></i> 
+                                <a href="mailto:{{ info_personal.email_contacto }}">{{ info_personal.email_contacto }}</a>
+                            </p>
+                        {% endif %}
+                        {% if info_personal.telefono_contacto %}
+                            <p class="mb-2">
+                                <i class="fas fa-phone text-warning"></i> 
+                                <a href="tel:{{ info_personal.telefono_contacto }}">{{ info_personal.telefono_contacto }}</a>
+                            </p>
+                        {% endif %}
+                        {% if info_personal.direccion %}
+                            <p class="mb-0">
+                                <i class="fas fa-map-marker-alt text-warning"></i> {{ info_personal.direccion }}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-user fa-4x text-muted mb-3"></i>
+            <p class="lead text-muted">La información personal aún no ha sido configurada.</p>
+            <p class="text-muted">Por favor, configura la información en el panel de administración.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

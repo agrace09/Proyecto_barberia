@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Galería de Cortes - Todo es Arte{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="padding-top: 100px;">
+    <h2 class="philosophy-title font-serif text-center mb-5">Galería de Cortes</h2>
+    
+    <!-- Grid de Cortes -->
+    {% if cortes %}
+        <div class="row">
+            {% for corte in cortes %}
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card card-custom" style="background-color: rgba(255, 255, 255, 0.05); border: 1px solid rgba(201, 169, 97, 0.2);">
+                    <img src="{{ corte.imagen.url }}" class="card-img-top" alt="{{ corte.titulo }}" style="height: 300px; object-fit: cover;">
+                    <div class="card-body" style="color: var(--color-text);">
+                        <h5 class="card-title font-serif" style="color: var(--color-text);">{{ corte.titulo }}</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <small style="color: var(--color-text-muted);">
+                                <i class="fas fa-calendar"></i> {{ corte.fecha|date:"d M Y" }}
+                            </small>
+                            {% if corte.servicio_domicilio %}
+                                <span style="color: var(--color-accent); font-size: 0.9rem;">
+                                    <i class="fas fa-home"></i> Domicilio
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-cut fa-4x" style="color: var(--color-text-muted); margin-bottom: 1rem;"></i>
+            <p class="lead" style="color: var(--color-text-muted);">No hay cortes disponibles aún.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,111 +1,112 @@
 {% extends 'base.html' %}
 
-{% block title %}Contacto - Marca Personal{% endblock %}
+{% block title %}Contacto - {{ info_personal.nombre_artistico|default:"Marca Personal" }}{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <h2 class="section-title">Contáctame</h2>
-    
-    <div class="row">
-        <!-- Formulario -->
-        <div class="col-md-8 mx-auto">
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
-                    <form method="post">
-                        {% csrf_token %}
-                        
-                        <div class="mb-3">
-                            <label for="{{ form.nombre.id_for_label }}" class="form-label">
-                                {{ form.nombre.label }}
-                            </label>
-                            {{ form.nombre }}
-                            {% if form.nombre.errors %}
-                                <div class="text-danger">{{ form.nombre.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="{{ form.email.id_for_label }}" class="form-label">
-                                {{ form.email.label }}
-                            </label>
-                            {{ form.email }}
-                            {% if form.email.errors %}
-                                <div class="text-danger">{{ form.email.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="{{ form.telefono.id_for_label }}" class="form-label">
-                                {{ form.telefono.label }} <small class="text-muted">(Opcional)</small>
-                            </label>
-                            {{ form.telefono }}
-                            {% if form.telefono.errors %}
-                                <div class="text-danger">{{ form.telefono.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="{{ form.asunto.id_for_label }}" class="form-label">
-                                {{ form.asunto.label }}
-                            </label>
-                            {{ form.asunto }}
-                            {% if form.asunto.errors %}
-                                <div class="text-danger">{{ form.asunto.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="{{ form.mensaje.id_for_label }}" class="form-label">
-                                {{ form.mensaje.label }}
-                            </label>
-                            {{ form.mensaje }}
-                            {% if form.mensaje.errors %}
-                                <div class="text-danger">{{ form.mensaje.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary-custom w-100">
-                            <i class="fas fa-paper-plane"></i> Enviar Mensaje
-                        </button>
-                    </form>
-                </div>
+<div class="container py-5" style="padding-top: 120px !important; min-height: 80vh; display: flex; align-items: center;">
+    <div class="row w-100 justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6 text-center">
+            
+            <h2 class="fw-bold text-uppercase mb-3" style="color: #d4af37; letter-spacing: 3px; font-size: 2.5rem;">CONTÁCTAME</h2>
+            <div style="width: 80px; height: 3px; background-color: #d4af37; margin: 0 auto 40px;"></div>
+            
+            <p class="text-light mb-5" style="font-size: 1.2rem;">¿Quieres trabajar conmigo o hacer una colaboración? Haz clic en cualquiera de las opciones abajo para hablar directamente.</p>
+
+            <div class="d-flex flex-column gap-4">
+                
+                {% if redes_contacto.whatsapp %}
+                <a href="{{ redes_contacto.whatsapp }}" target="_blank" class="contact-btn whatsapp-btn">
+                    <i class="fab fa-whatsapp fa-2x"></i>
+                    <span>Escríbeme por WhatsApp</span>
+                </a>
+                {% endif %}
+
+                {% if redes_contacto.instagram %}
+                <a href="{{ redes_contacto.instagram }}" target="_blank" class="contact-btn instagram-btn">
+                    <i class="fab fa-instagram fa-2x"></i>
+                    <span>Envíame un DM en Instagram</span>
+                </a>
+                {% endif %}
+
+                {% if redes_contacto.email %}
+                <a href="mailto:{{ redes_contacto.email }}" class="contact-btn email-btn">
+                    <i class="fas fa-envelope fa-2x"></i>
+                    <span>Envíame un Correo Electrónico</span>
+                </a>
+                {% endif %}
+
+                {% if redes_contacto.google_maps %}
+                <a href="{{ redes_contacto.google_maps }}" target="_blank" class="contact-btn maps-btn">
+                    <i class="fas fa-map-marker-alt fa-2x"></i>
+                    <span>Cómo llegar</span>
+                </a>
+                {% endif %}
+
             </div>
+            
+            {% if not redes_contacto.whatsapp and not redes_contacto.instagram and not redes_contacto.email %}
+                <div class="alert alert-warning mt-4" role="alert" style="background-color: rgba(212, 175, 55, 0.1); border-color: #d4af37; color: #e1e1e1;">
+                    <i class="fas fa-tools me-2"></i> Estamos configurando nuestras redes de contacto. ¡Vuelve pronto!
+                </div>
+            {% endif %}
+            
+
         </div>
     </div>
-    
-    <!-- Información de Contacto -->
-    {% if info_personal %}
-    <div class="row mt-5">
-        <div class="col-md-8 mx-auto">
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
-                    <h4 class="mb-4">Información de Contacto</h4>
-                    <div class="row">
-                        {% if info_personal.email_contacto %}
-                        <div class="col-md-6 mb-3">
-                            <p><i class="fas fa-envelope text-warning"></i> <strong>Email:</strong><br>
-                            <a href="mailto:{{ info_personal.email_contacto }}">{{ info_personal.email_contacto }}</a></p>
-                        </div>
-                        {% endif %}
-                        
-                        {% if info_personal.telefono_contacto %}
-                        <div class="col-md-6 mb-3">
-                            <p><i class="fas fa-phone text-warning"></i> <strong>Teléfono:</strong><br>
-                            <a href="tel:{{ info_personal.telefono_contacto }}">{{ info_personal.telefono_contacto }}</a></p>
-                        </div>
-                        {% endif %}
-                        
-                        {% if info_personal.direccion %}
-                        <div class="col-md-12 mb-3">
-                            <p><i class="fas fa-map-marker-alt text-warning"></i> <strong>Dirección:</strong><br>
-                            {{ info_personal.direccion }}</p>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+body {
+    background-color: #0f0f0f;
+}
+
+.contact-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 18px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: white;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    background: #1a1a1a;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.contact-btn:hover {
+    transform: translateY(-5px);
+    color: white;
+}
+
+/* Colores e iconos específicos para cada red al pasar el mouse */
+.whatsapp-btn:hover {
+    border-color: #25D366;
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+    color: #25D366;
+}
+
+.instagram-btn:hover {
+    border-color: #E1306C;
+    box-shadow: 0 8px 25px rgba(225, 48, 108, 0.3);
+    color: #E1306C;
+}
+
+.email-btn:hover {
+    border-color: #d4af37;
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+    color: #d4af37;
+}
+
+.maps-btn:hover {
+    border-color: #EA4335;
+    box-shadow: 0 8px 25px rgba(234, 67, 53, 0.3);
+    color: #EA4335;
+}
+</style>
 {% endblock %}

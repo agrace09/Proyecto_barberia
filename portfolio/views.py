@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import CorteCabello, Musica, MensajeContacto, InformacionPersonal, ImagenHero
-from .forms import ContactoForm
+
 
 
 def index(request):
@@ -49,44 +49,28 @@ def musica(request):
         'videos': videos,
     }
     return render(request, 'portfolio/musica.html', context)
-
-
+# En portfolio/views.py
 def contacto(request):
-    """Vista para el formulario de contacto"""
-    if request.method == 'POST':
-        form = ContactoForm(request.POST)
-        if form.is_valid():
-            mensaje = form.save()
-            
-            # Enviar email (opcional)
-            try:
-                send_mail(
-                    subject=f'Nuevo mensaje de contacto: {mensaje.asunto}',
-                    message=f'De: {mensaje.nombre} ({mensaje.email})\n\n{mensaje.mensaje}',
-                    from_email=settings.DEFAULT_FROM_EMAIL if hasattr(settings, 'DEFAULT_FROM_EMAIL') else mensaje.email,
-                    recipient_list=[settings.EMAIL_HOST_USER] if hasattr(settings, 'EMAIL_HOST_USER') else [],
-                    fail_silently=True,
-                )
-            except:
-                pass  # Si falla el email, no es crítico
-            
-            messages.success(request, '¡Mensaje enviado con éxito! Te contactaremos pronto.')
-            return redirect('contacto')
-    else:
-        form = ContactoForm()
+    """Vista para la página de contacto (Solo botones de redes)"""
     
-    # Obtener información personal para mostrar datos de contacto
+    # 1. Obtenemos tu Información Personal
     try:
         info_personal = InformacionPersonal.objects.get(pk=1)
     except InformacionPersonal.DoesNotExist:
         info_personal = None
+        
+    # 2. Obtenemos tus Redes de Contacto (de la clase que acabamos de modificar)
+    try:
+        redes_contacto = MensajeContacto.objects.get(pk=1)
+    except MensajeContacto.DoesNotExist:
+        redes_contacto = None
     
+    # Pasamos ambas variables a tu HTML
     context = {
-        'form': form,
         'info_personal': info_personal,
+        'redes_contacto': redes_contacto,
     }
     return render(request, 'portfolio/contacto.html', context)
-
 
 def sobre_mi(request):
     """Vista para la página 'Sobre Mí'"""
@@ -94,8 +78,21 @@ def sobre_mi(request):
         info_personal = InformacionPersonal.objects.get(pk=1)
     except InformacionPersonal.DoesNotExist:
         info_personal = None
-    
+
+    imagenes_bio = ImagenHero.objects.filter(activa=True).order_by('orden')[:6]
+
+    exitos_list = []
+    caracteristicas_list = []
+    if info_personal:
+        if info_personal.exitos:
+            exitos_list = [x.strip() for x in info_personal.exitos.splitlines() if x.strip()]
+        if info_personal.caracteristicas:
+            caracteristicas_list = [x.strip() for x in info_personal.caracteristicas.splitlines() if x.strip()]
+
     context = {
         'info_personal': info_personal,
+        'imagenes_bio': imagenes_bio,
+        'exitos_list': exitos_list,
+        'caracteristicas_list': caracteristicas_list,
     }
     return render(request, 'portfolio/sobre_mi.html', context)

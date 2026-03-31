@@ -3,25 +3,26 @@
 {% block title %}Inicio - Todo es Arte{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
+{%load static %}
 <section class="hero-section">
     <div class="hero-images-container">
         {% if imagenes_hero %}
             {% for imagen in imagenes_hero %}
-            <div class="hero-image-slide {% if forloop.first %}active{% endif %}" style="background-image: url('{{ imagen.imagen.url }}');"></div>
+            <div class="hero-image-static" style="background-image: url('{{ imagen.imagen.url }}');"></div>
             {% endfor %}
         {% else %}
-            <!-- Imágenes por defecto si no hay imágenes cargadas -->
-            <div class="hero-image-slide active" style="background-image: url('C:\Users\txmas\OneDrive\Imágenes\hero2');"></div>
-            <div class="hero-image-slide" style="background-image: url('C:\Users\txmas\OneDrive\Imágenes\hero01');"></div>
-            <div class="hero-image-slide" style="background-image: url('C:\Users\txmas\OneDrive\Imágenes\hero3');"></div>
+            <div class="hero-image-static" style="background-image: url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&q=80');"></div>
+            <div class="hero-image-static" style="background-image: url('https://images.unsplash.com/photo-1593085512084-e65ee7bc59c4?w=800&q=80');"></div>
+            <div class="hero-image-static" style="background-image: url('https://images.unsplash.com/photo-1517230878791-4d28214057c2?w=800&q=80');"></div>
         {% endif %}
         <div class="hero-overlay"></div>
     </div>
+
     <div class="hero-content">
-        <h1 class="hero-title font-serif">wawy style.</h1>
-        <p class="hero-subtitle">MÚSICA · BARBERÍA · ESTILO</p>
-        <div class="d-flex gap-3 justify-content-center flex-wrap">
+        <h1 class="wawy-title">wawy style.</h1>
+        <p class="wawy-subtitle">MÚSICA · BARBERÍA · ESTILO</p>
+        
+        <div class="d-flex gap-3 justify-content-center flex-wrap mt-4">
             <a href="{% url 'portfolio:galeria_cortes' %}" class="btn btn-outline-light-custom">
                 Explorar el arte
             </a>
@@ -30,23 +31,8 @@
             </a>
         </div>
     </div>
-    <!-- Indicadores del carrusel -->
-    {% if imagenes_hero %}
-    <div class="hero-indicators">
-        {% for imagen in imagenes_hero %}
-        <span class="hero-indicator {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></span>
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="hero-indicators">
-        <span class="hero-indicator active" data-slide="0"></span>
-        <span class="hero-indicator" data-slide="1"></span>
-        <span class="hero-indicator" data-slide="2"></span>
-    </div>
-    {% endif %}
 </section>
 
-<!-- Philosophy Section -->
 <section class="philosophy-section">
     <div class="container">
         <h2 class="philosophy-title font-serif">El arte se vive.</h2>
@@ -57,11 +43,9 @@
     </div>
 </section>
 
-<!-- Feature Panels -->
 <div class="row g-0">
-    <!-- Music Panel -->
     <div class="col-md-6">
-        <div class="feature-panel" style="background-image: linear-gradient(rgba(10, 10, 10, 0.6), rgba(10, 10, 10, 0.8)), url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&q=80');">
+        <div class="feature-panel" style="background-image: linear-gradient(rgba(10, 10, 10, 0.6), rgba(10, 10, 10, 0.8)), url('{% static "imagenes/New-IMAGE.png" %}');">
             <div class="feature-content">
                 <h2 class="feature-title font-serif">Música</h2>
                 <p class="feature-description">
@@ -74,7 +58,6 @@
         </div>
     </div>
     
-    <!-- Barbería Panel -->
     <div class="col-md-6">
         <div class="feature-panel" style="background-image: linear-gradient(rgba(10, 10, 10, 0.6), rgba(10, 10, 10, 0.8)), url('https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=1200&q=80');">
             <div class="feature-content">
@@ -89,139 +72,76 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block extra_css %}
 <style>
-    /* Hero Section con 3 imágenes */
+    /* Importamos la fuente cursiva para el título */
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+
+    /* Hero Section */
     .hero-section {
         margin-top: -73px;
         padding-top: 76px;
         position: relative;
         overflow: hidden;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .hero-images-container {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 0; display: flex;
     }
     
-    .hero-image-slide {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        background-position: center;
-        opacity: 0;
-        transition: opacity 2s ease-in-out;
+    .hero-image-static {
+        flex: 1; height: 100%;
+        background-size: cover; background-position: center;
+        transition: all 0.5s ease;
     }
-    
-    .hero-image-slide.active {
-        opacity: 1;
-    }
+
+    .hero-image-static:hover { flex: 1.2; }
     
     .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-            to bottom,
-            rgba(36, 33, 33, 0.56),
-            rgba(10, 10, 10, 0.8)
-        );
-        z-index: 1;
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(36, 33, 33, 0.56), rgba(10, 10, 10, 0.8));
+        z-index: 1; pointer-events: none;
     }
     
-    .hero-content {
-        position: relative;
-        z-index: 2;
+    .hero-content { position: relative; z-index: 2; text-align: center; }
+
+    /* --- MAGIA DEL TÍTULO WAWY STYLE --- */
+    .wawy-title {
+        font-family: 'Dancing Script', cursive;
+        font-size: clamp(4rem, 10vw, 8rem); /* Gigante en PC, ajustado en celular */
+        color: #fdf5c9; /* Centro claro */
+        font-weight: 700;
+        margin-bottom: 15px;
+        line-height: 1;
+        /* Efecto de resplandor neón dorado */
+        text-shadow: 
+            0 0 10px #d4af37,         
+            0 0 20px #d4af37,         
+            0 0 40px #b8860b,         
+            0 0 80px rgba(212, 175, 55, 0.6), 
+            4px 4px 5px rgba(0,0,0, 0.8); /* Sombra dura negra para separar del fondo */
+    }
+
+    .wawy-subtitle {
+        color: white;
+        letter-spacing: 5px;
+        font-size: clamp(0.8rem, 2vw, 1.2rem);
+        text-transform: uppercase;
+        font-weight: 500;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
     }
     
-    /* Indicadores del carrusel */
-    .hero-indicators {
-        position: absolute;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 10px;
-        z-index: 3;
-    }
-    
-    .hero-indicator {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.4);
-        cursor: pointer;
-        transition: all 0.3s;
-        border: 2px solid transparent;
-    }
-    
-    .hero-indicator.active {
-        background: var(--color-accent);
-        border-color: var(--color-text);
-        transform: scale(1.2);
-    }
-    
-    .hero-indicator:hover {
-        background: rgba(255, 255, 255, 0.6);
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-images-container { flex-direction: column; }
     }
 </style>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-    // Carrusel automático del hero
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.hero-image-slide');
-    const indicators = document.querySelectorAll('.hero-indicator');
-    const totalSlides = slides.length;
-    let slideInterval;
-    
-    function showSlide(index) {
-        if (totalSlides === 0) return;
-        
-        // Remover active de todos
-        slides.forEach(slide => slide.classList.remove('active'));
-        indicators.forEach(indicator => indicator.classList.remove('active'));
-        
-        // Agregar active al slide actual
-        if (slides[index]) slides[index].classList.add('active');
-        if (indicators[index]) indicators[index].classList.add('active');
-    }
-    
-    function nextSlide() {
-        if (totalSlides > 0) {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            showSlide(currentSlide);
-        }
-    }
-    
-    // Iniciar carrusel solo si hay imágenes
-    if (totalSlides > 1) {
-        // Cambiar slide cada 5 segundos
-        slideInterval = setInterval(nextSlide, 5000);
-        
-        // Click en indicadores
-        indicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', () => {
-                currentSlide = index;
-                showSlide(currentSlide);
-                // Reiniciar el intervalo
-                clearInterval(slideInterval);
-                slideInterval = setInterval(nextSlide, 5000);
-            });
-        });
-    }
-</script>
 {% endblock %}

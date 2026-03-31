@@ -16,15 +16,9 @@ class MusicaAdmin(admin.ModelAdmin):
     list_filter = ['tipo', 'fecha_lanzamiento', 'destacado']
     search_fields = ['titulo', 'descripcion']
 
-
 @admin.register(MensajeContacto)
 class MensajeContactoAdmin(admin.ModelAdmin):
-    list_display = ['nombre', 'email', 'asunto', 'fecha', 'estado']
-    list_filter = ['estado', 'fecha']
-    search_fields = ['nombre', 'email', 'asunto', 'mensaje']
-    readonly_fields = ['fecha']
-    date_hierarchy = 'fecha'
-
+    list_display = ('__str__', 'email', 'instagram', 'whatsapp', 'google_maps')
 
 @admin.register(ImagenHero)
 class ImagenHeroAdmin(admin.ModelAdmin):
@@ -45,13 +39,18 @@ class ImagenHeroAdmin(admin.ModelAdmin):
 @admin.register(InformacionPersonal)
 class InformacionPersonalAdmin(admin.ModelAdmin):
     fieldsets = (
-        ('Información Básica', {
-            'fields': ('nombre_artistico', 'biografia', 'foto_perfil')
+        ('Presentación / Biografía', {
+            'fields': ('nombre_artistico', 'foto_perfil', 'biografia', 'foto_logros')
         }),
-        ('Contacto', {
-            'fields': ('email_contacto', 'telefono_contacto', 'direccion')
-        }),
-        ('Redes Sociales', {
-            'fields': ('instagram', 'facebook', 'twitter', 'youtube', 'spotify')
+        ('Éxitos y Características', {
+            'fields': ('exitos', 'caracteristicas')
         }),
     )
+    list_display = ['nombre_artistico']
+    search_fields = ['nombre_artistico', 'biografia']
+
+    def has_add_permission(self, request):
+        # Solo permitir un registro (manteniendo la lógica de modelo que fija pk=1 en save())
+        if InformacionPersonal.objects.exists():
+            return False
+        return super().has_add_permission(request)

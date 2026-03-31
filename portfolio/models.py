@@ -66,44 +66,44 @@ class Musica(models.Model):
     
     def __str__(self):
         return f"{self.titulo} ({self.get_tipo_display()})"
-
-
+# Reemplaza la clase MensajeContacto antigua por esta en portfolio/models.py
 class MensajeContacto(models.Model):
-    """Modelo para almacenar mensajes del formulario de contacto"""
-    ESTADO_CHOICES = [
-        ('nuevo', 'Nuevo'),
-        ('leido', 'Leído'),
-        ('respondido', 'Respondido'),
-    ]
-    
-    nombre = models.CharField(max_length=100, verbose_name='Nombre')
-    email = models.EmailField(verbose_name='Email')
-    telefono = models.CharField(
-        max_length=20, 
+    """Modelo para configurar los enlaces directos de contacto del artista"""
+    email = models.EmailField(
+        verbose_name='Correo Electrónico',
+        help_text='Tu correo para que te contacten.'
+    )
+    instagram = models.URLField(
         blank=True, 
-        verbose_name='Teléfono'
+        null=True,
+        verbose_name='Enlace de Instagram',
+        help_text='Ejemplo: https://instagram.com/tu_usuario'
     )
-    asunto = models.CharField(max_length=200, verbose_name='Asunto')
-    mensaje = models.TextField(verbose_name='Mensaje')
-    fecha = models.DateTimeField(
-        default=timezone.now, 
-        verbose_name='Fecha de Envío'
+    whatsapp = models.URLField(
+        blank=True, 
+        null=True,
+        verbose_name='Enlace de WhatsApp',
+        help_text='Ejemplo: https://wa.me/573001234567'
     )
-    estado = models.CharField(
-        max_length=20, 
-        choices=ESTADO_CHOICES, 
-        default='nuevo',
-        verbose_name='Estado'
+    # --- NUEVO CAMPO PARA MAPS ---
+    google_maps = models.URLField(
+        blank=True, 
+        null=True,
+        verbose_name='Enlace de Google Maps',
+        help_text='Ve a Google Maps, busca tu ubicación, dale a "Compartir" y pega ese enlace aquí.'
     )
-    
-    class Meta:
-        verbose_name = 'Mensaje de Contacto'
-        verbose_name_plural = 'Mensajes de Contacto'
-        ordering = ['-fecha']
-    
-    def __str__(self):
-        return f"{self.nombre} - {self.asunto}"
 
+    class Meta:
+        verbose_name = 'Red de Contacto'
+        verbose_name_plural = 'Redes de Contacto'
+
+    def __str__(self):
+        return "Mis Enlaces de Contacto"
+        
+    def save(self, *args, **kwargs):
+        # Esto asegura que solo exista un registro de redes (el tuyo) en la base de datos
+        self.pk = 1
+        super().save(*args, **kwargs)
 
 class ImagenHero(models.Model):
     """Modelo para las imágenes del hero section (máximo 3)"""
@@ -136,10 +136,25 @@ class InformacionPersonal(models.Model):
         verbose_name='Nombre Artístico'
     )
     biografia = models.TextField(verbose_name='Biografía')
+    
     foto_perfil = models.ImageField(
         upload_to='perfil/', 
         verbose_name='Foto de Perfil'
     )
+    
+    # --- ¡ESTA ES LA LÍNEA NUEVA! ---
+    foto_logros = models.ImageField(
+        upload_to='logros/', 
+        blank=True, 
+        null=True, 
+        verbose_name='Foto de Logros',
+        help_text='Imagen que aparecerá en la sección de Logros del carrusel.'
+    )
+    # --------------------------------
+    
+    email_contacto = models.EmailField(verbose_name='Email de Contacto')
+    # ... (el resto de tus campos siguen igual: telefono_contacto, direccion, etc.)
+   
     email_contacto = models.EmailField(verbose_name='Email de Contacto')
     telefono_contacto = models.CharField(
         max_length=20, 
@@ -151,6 +166,8 @@ class InformacionPersonal(models.Model):
     twitter = models.URLField(blank=True, verbose_name='Twitter')
     youtube = models.URLField(blank=True, verbose_name='YouTube')
     spotify = models.URLField(blank=True, verbose_name='Spotify')
+    exitos = models.TextField(blank=True, verbose_name='Éxitos', help_text='Lista de éxitos separados por salto de línea.')
+    caracteristicas = models.TextField(blank=True, verbose_name='Características', help_text='Otras fortalezas/competencias.')
     
     class Meta:
         verbose_name = 'Información Personal'

@@ -1,94 +1,283 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Sobre Mí - Marca Personal{% endblock %}
+{% block title %}Sobre Mí - {{ info_personal.nombre_artistico|default:"Marca Personal" }}{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="fixed-container d-flex flex-column justify-content-between align-items-center w-100">
     {% if info_personal %}
-        <div class="row">
-            <div class="col-md-4 text-center mb-4">
+        
+        <div class="text-center w-100 mt-3">
+            <figure class="mx-auto mb-1">
                 {% if info_personal.foto_perfil %}
-                    <img src="{{ info_personal.foto_perfil.url }}" 
-                         alt="{{ info_personal.nombre_artistico }}" 
-                         class="img-fluid rounded-circle shadow-lg"
-                         style="max-width: 300px; width: 100%;">
+                    <div class="perfil-portrait rounded-circle shadow-lg mx-auto">
+                        <img src="{{ info_personal.foto_perfil.url }}" alt="{{ info_personal.nombre_artistico }}" class="w-100 h-100">
+                    </div>
                 {% else %}
-                    <div class="bg-dark rounded-circle d-inline-flex align-items-center justify-content-center" 
-                         style="width: 300px; height: 300px;">
-                        <i class="fas fa-user fa-5x text-warning"></i>
+                    <div class="bg-dark rounded-circle d-inline-flex align-items-center justify-content-center mx-auto perfil-portrait">
+                        <i class="fas fa-user fa-3x text-warning"></i>
                     </div>
                 {% endif %}
-            </div>
+                <figcaption class="mt-2 artist-name">
+                    {{ info_personal.nombre_artistico|default:"el wawy" }}
+                </figcaption>
+                <div style="width: 8px; height: 8px; background-color: #d4af37; border-radius: 50%; margin: 5px auto 0; box-shadow: 0 0 10px #d4af37;"></div>
+            </figure>
+        </div>
+
+        <div class="w-100 text-center flex-grow-1 d-flex flex-column justify-content-center">
             
-            <div class="col-md-8">
-                <h1 class="mb-4">{{ info_personal.nombre_artistico }}</h1>
-                <div class="mb-4">
-                    {{ info_personal.biografia|linebreaks }}
-                </div>
-                
-                <!-- Redes Sociales -->
-                <div class="mb-4">
-                    <h4>Sígueme en:</h4>
-                    <div class="d-flex gap-3 flex-wrap">
-                        {% if info_personal.instagram %}
-                            <a href="{{ info_personal.instagram }}" target="_blank" class="btn btn-outline-dark">
-                                <i class="fab fa-instagram"></i> Instagram
-                            </a>
-                        {% endif %}
-                        {% if info_personal.facebook %}
-                            <a href="{{ info_personal.facebook }}" target="_blank" class="btn btn-outline-primary">
-                                <i class="fab fa-facebook"></i> Facebook
-                            </a>
-                        {% endif %}
-                        {% if info_personal.twitter %}
-                            <a href="{{ info_personal.twitter }}" target="_blank" class="btn btn-outline-info">
-                                <i class="fab fa-twitter"></i> Twitter
-                            </a>
-                        {% endif %}
-                        {% if info_personal.youtube %}
-                            <a href="{{ info_personal.youtube }}" target="_blank" class="btn btn-outline-danger">
-                                <i class="fab fa-youtube"></i> YouTube
-                            </a>
-                        {% endif %}
-                        {% if info_personal.spotify %}
-                            <a href="{{ info_personal.spotify }}" target="_blank" class="btn btn-outline-success">
-                                <i class="fab fa-spotify"></i> Spotify
-                            </a>
-                        {% endif %}
+            <div class="mb-2">
+                <h2 class="section-title mb-1">MI TRAYECTORIA</h2>
+                <div class="title-underline mx-auto"></div>
+            </div>
+
+            <div class="col-12 col-lg-10 mx-auto position-relative h-100 d-flex align-items-center">
+                <div id="trayectoriaCarousel" class="carousel slide w-100" data-bs-ride="carousel">
+                    <div class="carousel-inner px-md-5">
+
+                        <div class="carousel-item active">
+                            <div class="glowing-card mx-auto p-3 p-md-4">
+                                <div class="row align-items-center h-100">
+                                    <div class="col-4 col-md-5 text-center h-100 d-none d-sm-block">
+                                        <div class="rounded-4 overflow-hidden position-relative img-container">
+                                           {% if info_personal.foto_logros %}
+                                                <img src="{{ info_personal.foto_logros.url }}" alt="Biografía" class="w-100 h-100" style="object-fit: cover; position: absolute; top: 0; left: 0;">
+                                            {% else %}
+                                                <div class="w-100 h-100 bg-dark d-flex align-items-center justify-content-center" style="position: absolute; top: 0; left: 0;">
+                                                    <i class="fas fa-image fa-2x text-muted opacity-50"></i>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-8 col-md-7 content-text text-start d-flex flex-column justify-content-center" style="max-height: 25vh; overflow-y: auto;">
+                                        <h3 class="gold-title mb-2">SOBRE MÍ</h3>
+                                        <div class="bio-text">
+                                            {% if info_personal.biografia %}
+                                                {{ info_personal.biografia|linebreaks|safe }}
+                                            {% else %}
+                                                <p>Información de biografía no disponible...</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="carousel-item">
+                            <div class="glowing-card mx-auto p-3 p-md-4">
+                                <h3 class="gold-title text-center mb-3">ÉXITOS Y CARACTERÍSTICAS</h3>
+                                <div class="row g-3" style="max-height: 20vh; overflow-y: auto;">
+                                    <div class="col-6 content-text text-start">
+                                        <h4 class="fw-bold gold-text fs-6">Éxitos</h4>
+                                        {% if exitos_list %}
+                                            <ul class="list-unstyled mb-0">
+                                                {% for exito in exitos_list %}
+                                                    <li class="mb-1"><i class="fas fa-star me-2 gold-text"></i>{{ exito }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p class="text-muted small">No hay éxitos.</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-6 content-text text-start">
+                                        <h4 class="fw-bold gold-text fs-6">Características</h4>
+                                        {% if caracteristicas_list %}
+                                            <ul class="list-unstyled mb-0">
+                                                {% for car in caracteristicas_list %}
+                                                    <li class="mb-1"><i class="fas fa-check me-2 gold-text"></i>{{ car }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p class="text-muted small">No hay características.</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                </div>
-                
-                <!-- Información de Contacto -->
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Información de Contacto</h5>
-                        {% if info_personal.email_contacto %}
-                            <p class="mb-2">
-                                <i class="fas fa-envelope text-warning"></i> 
-                                <a href="mailto:{{ info_personal.email_contacto }}">{{ info_personal.email_contacto }}</a>
-                            </p>
-                        {% endif %}
-                        {% if info_personal.telefono_contacto %}
-                            <p class="mb-2">
-                                <i class="fas fa-phone text-warning"></i> 
-                                <a href="tel:{{ info_personal.telefono_contacto }}">{{ info_personal.telefono_contacto }}</a>
-                            </p>
-                        {% endif %}
-                        {% if info_personal.direccion %}
-                            <p class="mb-0">
-                                <i class="fas fa-map-marker-alt text-warning"></i> {{ info_personal.direccion }}
-                            </p>
-                        {% endif %}
-                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#trayectoriaCarousel" data-bs-slide="prev">
+                        <div class="nav-btn shadow-lg"><i class="fas fa-chevron-left"></i></div>
+                        <span class="visually-hidden">Anterior</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#trayectoriaCarousel" data-bs-slide="next">
+                        <div class="nav-btn shadow-lg"><i class="fas fa-chevron-right"></i></div>
+                        <span class="visually-hidden">Siguiente</span>
+                    </button>
                 </div>
             </div>
         </div>
-    {% else %}
-        <div class="text-center py-5">
-            <i class="fas fa-user fa-4x text-muted mb-3"></i>
-            <p class="lead text-muted">La información personal aún no ha sido configurada.</p>
-            <p class="text-muted">Por favor, configura la información en el panel de administración.</p>
+
+        <div class="text-center w-100 mb-3">
+            <h2 class="section-title fs-5 mb-1">SÍGUEME</h2>
+            <div class="title-underline mx-auto mb-2" style="width: 50px;"></div>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{{ info_personal.youtube|default:'#' }}" class="social-icon" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="{{ info_personal.instagram|default:'#' }}" class="social-icon" target="_blank"><i class="fab fa-instagram"></i></a>
+            </div>
         </div>
+
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Importamos la nueva fuente cursiva musical */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+
+:root { --gold: #d4af37; }
+
+/* REGLA MAESTRA PARA BLOQUEAR SCROLL Y FIJAR PANTALLA */
+body {
+    background-color: #0f0f0f;
+    background-image: url('{% static "img/musica_pattern.png" %}');
+    background-repeat: repeat;
+    color: #e1e1e1;
+    font-family: 'Inter', sans-serif; /* La fuente normal para leer fácil */
+    overflow: hidden !important; 
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor principal */
+.fixed-container {
+    height: calc(100vh - 70px); 
+    margin-top: 70px; 
+    padding: 10px 15px;
+}
+
+/* --- PERFIL ESCALADO --- */
+.perfil-portrait {
+    width: 22vh;
+    height: 22vh;
+    min-width: 150px;
+    min-height: 150px;
+    border: 3px solid var(--gold);
+    overflow: hidden;
+    box-shadow: 0 0 25px rgba(212,175,55,0.4);
+}
+.perfil-portrait img { object-fit: cover; }
+
+/* --- MAGIA DE ORO PARA EL NOMBRE --- */
+.artist-name {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2.5rem, 6vh, 4.5rem); /* Un poco más grande para que resalte */
+    color: #fdf5c9; /* Centro claro */
+    font-weight: 700;
+    margin-bottom: 0;
+    text-shadow: 
+        0 0 10px #d4af37,         
+        0 0 20px #d4af37,         
+        0 0 40px #b8860b,         
+        0 0 80px rgba(212, 175, 55, 0.6), 
+        3px 3px 5px rgba(0,0,0, 0.8); /* Sombra dura negra */
+    line-height: 1.1;
+}
+
+.section-title {
+    color: var(--gold);
+    letter-spacing: 2px;
+    font-size: clamp(1rem, 2.5vh, 1.5rem);
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 0;
+}
+.title-underline {
+    height: 2px;
+    background: var(--gold);
+    margin-top: 5px;
+}
+
+/* --- CARRUSEL BRILLANTE --- */
+.glowing-card {
+    max-width: 800px;
+    height: 38vh;
+    max-height: 350px;
+    background: linear-gradient(145deg, #181818, #0a0a0a);
+    border: 2px solid rgba(212, 175, 55, 0.4);
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.img-container {
+    height: 30vh;
+    border: 2px solid rgba(212, 175, 55, 0.4);
+}
+
+/* --- TÍTULOS DE LA TARJETA EN CURSIVA (Con brillo suave) --- */
+.gold-title {
+    font-family: 'Dancing Script', cursive; 
+    color: #fdf5c9;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 4vh, 2.5rem); 
+    letter-spacing: 1px;
+    text-shadow: 
+        0 0 10px #d4af37, 
+        0 0 20px rgba(212, 175, 55, 0.6);
+}
+
+.content-text {
+    color: #e1e1e1;
+    font-size: clamp(0.85rem, 2vh, 1rem);
+    line-height: 1.4;
+}
+.bio-text p { margin-bottom: 10px; }
+.gold-text { color: var(--gold) !important; }
+
+/* Scroll interno */
+.content-text::-webkit-scrollbar { width: 5px; }
+.content-text::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+
+/* --- BOTONES DE NAVEGACIÓN --- */
+.nav-btn {
+    background-color: var(--gold);
+    color: #111;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+.carousel-control-prev, .carousel-control-next { width: 5%; }
+
+/* --- ICONOS SOCIALES --- */
+.social-icon {
+    font-size: 1.5rem;
+    color: white;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+.social-icon:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+    transform: translateY(-3px);
+    text-shadow: 0 0 10px var(--gold);
+}
+
+/* RESPONSIVE */
+@media (max-width: 576px) {
+    .perfil-portrait {
+        width: 120px;
+        height: 120px;
+        min-width: 120px;
+        min-height: 120px;
+    }
+    .glowing-card { height: 48vh; }
+    .content-text { text-align: center !important; }
+}
+</style>
 {% endblock %}
